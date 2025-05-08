@@ -11,6 +11,11 @@ footer {
     align-items: center;
 }
 
+footer h1 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
 #footerSocialMedia {
     display: flex;
     flex-direction: column;
