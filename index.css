@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "quantico-bold";
+    src: url("./assets/fonts/quantico/Quantico-Bold.ttf");
+}
+
 * {
     margin: 0;
     box-sizing: border-box;
@@ -8,3 +13,4 @@ body {
     width: 100vw;
     background-color: #1A1A1A;
 }
+
