@@ -1,0 +1,29 @@
+footer {
+    width: 100%;
+    height: 250px;
+    /* background-color: beige; */
+    border: 2px solid white;
+    padding: 100px;
+    color: white;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#footerSocialMedia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#footerSocialMedia p {
+    margin-bottom: 10px;
+}
+
+#iconsSocialMedia {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+}
+
