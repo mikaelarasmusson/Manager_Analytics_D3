@@ -8,7 +8,8 @@ function renderFooter(parent) {
             <h1>Manager Analytics Contact:</h1>
             <p>Email: info@manageranalytics.se</p>
             <p>Phone: 072 - 374 56 89</p>
-            <p>Adress: Nordenskiöldsgatan 1, 211 19, Malmö.</p>
+            <p>Adress: Nordenskiöldsgatan 1,</p>
+            <p>211 19, Malmö.</p>
         </div>
         <div id="footerSocialMedia">
             <p>Följ oss på sociala medier!</p>

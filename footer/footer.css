@@ -1,8 +1,7 @@
 footer {
     width: 100%;
-    height: 250px;
-    /* background-color: beige; */
-    border: 2px solid white;
+    height: 245px;
+    background-color: #121315;
     padding: 100px;
     color: white;
 
@@ -12,8 +11,15 @@ footer {
 }
 
 footer h1 {
-    font-size: 20px;
+    font-family: "quantico-regular";
+    font-size: 18px;
     margin-bottom: 5px;
+}
+
+footer p {
+    font-family: "quantico-regular";
+    font-size: 14px;
+    line-height: 25px;
 }
 
 #footerSocialMedia {

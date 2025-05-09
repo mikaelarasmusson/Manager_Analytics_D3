@@ -1,4 +1,52 @@
+#buttonContainer {
+    display: inline-flex;
+    align-items: center;
+    flex-direction: column;
+    /* gap: 50px; */
+    margin: 50px;
+
+    position: sticky;
+    /* top: 10px; */
+    left: 80%;
+
+    color: white;
+}
+
+#buttonContainer button {
+    margin-bottom: 40px;
+    box-shadow: 0 4px 2px rgba(255, 255, 255, 0.4);
+
+}
+
+#buttonContainer p {
+    font-size: 18px;
+    font-family: "quantico-bold";
+    margin-bottom: 16px;
+}
+
 #buttonYear {
     width: 100px;
     height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border: none;
+
+    font-family: "quantico-bold";
+    color: white;
+    font-size: 16px;
 }
+
+#buttonCompilation {
+    width: 170px;
+    height: 30px;
+    background-color: #FF7EFF;
+    border-radius: 10px;
+    border: none;
+    
+    font-family: "quantico-bold";
+    color: white;
+    font-size: 16px;
+}
+

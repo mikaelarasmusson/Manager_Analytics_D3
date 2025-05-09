@@ -1,0 +1,41 @@
+header {
+    background-color: #121315;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;    
+}
+
+header img {
+    width: 210px;
+    height: 110px;
+}
+
+#infoContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 50px;
+
+    font-size: 16px;
+    font-family: "quantico-regular";
+    color: white;  
+}
+
+#infoContainer img {
+    width: 250px;
+    height: 250px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+#infoBild {
+    display: flex;
+    justify-content: center;
+}
+
+.infoText {
+    margin-bottom: 15px;
+}
+
