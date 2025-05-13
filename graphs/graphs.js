@@ -1,3 +1,6 @@
+
+
+
 function renderGraphsContainer (parent) {
     let parentId = document.getElementById("mainContainer");
 

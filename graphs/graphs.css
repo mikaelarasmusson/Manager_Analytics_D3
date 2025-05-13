@@ -12,3 +12,7 @@
     height: 50%;
     border: 1px solid limegreen;
 }
+
+.graphDivContainer p {
+    color: #fff;
+}
