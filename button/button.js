@@ -1,7 +1,11 @@
 
+const mainContainer = document.createElement("div");
+mainContainer.id = "mainContainer";
+wrapper.appendChild(mainContainer);
+
 const buttonContainer = document.createElement("div");
 buttonContainer.id = "buttonContainer";
-wrapper.appendChild(buttonContainer);
+mainContainer.appendChild(buttonContainer);
 
 
 const textFilter = document.createElement("p");

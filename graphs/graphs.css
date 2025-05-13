@@ -1,0 +1,14 @@
+#graphContainer {
+    width: 100%;
+    border: 1px solid red;
+}
+
+.graphDivContainer {
+    height: 25%;
+}
+
+.graphDivContainer div {
+    width: 80%;
+    height: 50%;
+    border: 1px solid limegreen;
+}

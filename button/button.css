@@ -1,12 +1,16 @@
+#mainContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 0 2.604vw 0 3vw;
+    gap: 2rem;
+}
+
 #buttonContainer {
     display: inline-flex;
     align-items: center;
     flex-direction: column;
-    /* gap: 50px; */
-    margin: 50px;
 
     position: sticky;
-    /* top: 10px; */
     left: 80%;
 
     color: white;
@@ -21,7 +25,8 @@
 #buttonContainer p {
     font-size: 18px;
     font-family: "quantico-bold";
-    margin-bottom: 16px;
+    margin-bottom: 30px;
+    line-height: 0.7;
 }
 
 #buttonYear {
