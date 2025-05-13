@@ -26,7 +26,7 @@ for (let manager of Managers) {
 
     let managerGigs = Gigs.filter(dj => dj.djID == dataset.djCollaboration.id);
     managerGigs.map((gig => {
-        
+
     }))
 
     dataset.gigs.push(managerGigs);
@@ -34,3 +34,14 @@ for (let manager of Managers) {
 }
 
 console.log(datasetManagerAnalyticsData);
+
+// Från chatgpt
+// managerGigs = managerGigs.map(gig => {
+//   return {
+//     date: gig.date,
+//     djID: gig.djID,
+//     cost: gig.cost,
+//     // ...alla andra fält du vill behålla
+//     year: gig.date.slice(0, 4)
+//   };
+// });
