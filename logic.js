@@ -36,9 +36,12 @@ for (let manager of Managers) {
     };
 
     let djCollaboration = DJs.find(dj => dj.managerID === managerId);
+    console.log("find", djCollaboration)
     if (!djCollaboration) continue;
 
     let managerGigs = Gigs.filter(gig => gig.djID === djCollaboration.id);
+
+
 
     for (let gig of managerGigs) {
         const year = gig.date.slice(0, 4);
@@ -46,7 +49,9 @@ for (let manager of Managers) {
             dataset.gigs[year].push({
                 date: gig.date,
                 earning: gig.managerEarnings,
-                attendance: gig.attendance
+                attendance: gig.attendance,
+                djId: gig.djID
+
             });
         }
     }
@@ -57,10 +62,12 @@ for (let manager of Managers) {
         let amountOfGigs = gigsThisYear.length;
         let totalEarnings = 0;
         let totalAttendees = 0;
+        let totalDjs = 0;
 
         for (let gig of gigsThisYear) {
             totalEarnings += gig.earning;
             totalAttendees += gig.attendance;
+            totalDjs += gig
         }
 
         dataset.summary[year] = {
@@ -77,9 +84,61 @@ for (let manager of Managers) {
 console.log("all data", datasetManagerAnalyticsData);
 
 
+///////////////
+
+// Beräkna statistik per år
+for (let managerData of datasetManagerAnalyticsData) {
+    console.log("Manager:", managerData.managerName);
+
+    let allDJs = [];
+
+    // Gå igenom varje år
+    for (let year in managerData.gigs) {
+        let gigsThisYear = managerData.gigs[year];
+        let totalEarnings = 0;
+        let totalAttendees = 0;
+        let uniqueDJsThisYear = [];
+
+        for (let gig of gigsThisYear) {
+            totalEarnings += gig.earning;
+            totalAttendees += gig.attendance;
+
+            if (gig.djId && !uniqueDJsThisYear.includes(gig.djId)) {
+                uniqueDJsThisYear.push(gig.djId);
+            }
+        }
+
+        // Lägg till i en lista för alla år om du vill ha alla DJs totalt
+        allDJs.push(...uniqueDJsThisYear);
+
+        console.log("allDjs", allDJs)
+        console.log(`År ${year} – ${uniqueDJsThisYear.length} unika DJs`);
+        console.log("DJ-ID:n:", uniqueDJsThisYear.join(", "));
+    }
+
+    // Om du vill visa totalt unika DJs över alla år för en manager
+    let uniqueAllDJs = [];
+    for (let djID of allDJs) {
+        if (!uniqueAllDJs.includes(djID)) {
+            uniqueAllDJs.push(djID);
+        }
+    }
+
+    console.log(`Manager ${managerData.managerName} jobbade totalt med ${uniqueAllDJs.length} unika DJs`);
+}
+
+
+
+
+
+///////////////////////
+
+
 const groupedByYear = [];
 
 const allYears = Object.keys(datasetManagerAnalyticsData[0].summary); // t.ex. "2015"–"2024"
+
+console.log("allyears", allYears)
 
 for (let year of allYears) {
     let managers = datasetManagerAnalyticsData.map(manager => {
@@ -89,6 +148,7 @@ for (let year of allYears) {
             earnings: summary?.totalEarnings || 0,
             gigs: summary?.totalGigs || 0,
             attendees: summary?.totalAttendees || 0
+            // djs:
         };
     });
 
