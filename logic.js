@@ -35,26 +35,33 @@ for (let manager of Managers) {
         summary: {}  // Här läggs årsstatistiken in
     };
 
-    let djCollaboration = DJs.find(dj => dj.managerID === managerId);
+    let djCollaboration = DJs.filter(dj => dj.managerID === managerId);
     console.log("find", djCollaboration)
-    if (!djCollaboration) continue;
+    if (djCollaboration.length == 0) continue;
 
-    let managerGigs = Gigs.filter(gig => gig.djID === djCollaboration.id);
+    // let managerGigs = Gigs.filter(gig => gig.djID === djCollaboration.id);
 
+    let allManagersGigs = [];
 
+    for (let dj of djCollaboration) {
+        let gigsForThisDj = Gigs.filter(gig => gig.djID == dj.id)
 
-    for (let gig of managerGigs) {
-        const year = gig.date.slice(0, 4);
-        if (dataset.gigs[year]) {
-            dataset.gigs[year].push({
-                date: gig.date,
-                earning: gig.managerEarnings,
-                attendance: gig.attendance,
-                djId: gig.djID
+        for (let gig of gigsForThisDj) {
+            const year = gig.date.slice(0, 4);
+            if (dataset.gigs[year]) {
+                dataset.gigs[year].push({
+                    date: gig.date,
+                    earning: gig.managerEarnings,
+                    attendance: gig.attendance,
+                    djId: gig.djID
 
-            });
+                });
+            }
         }
     }
+
+
+
 
     // Beräkna statistik per år
     for (let year in dataset.gigs) {
@@ -62,76 +69,31 @@ for (let manager of Managers) {
         let amountOfGigs = gigsThisYear.length;
         let totalEarnings = 0;
         let totalAttendees = 0;
-        let totalDjs = 0;
+        let unicDjsId = [];
 
         for (let gig of gigsThisYear) {
             totalEarnings += gig.earning;
             totalAttendees += gig.attendance;
-            totalDjs += gig
+
+            if (!unicDjsId.includes(gig.djId)) {
+                unicDjsId.push(gig.djId);
+            }
         }
 
         dataset.summary[year] = {
             totalGigs: amountOfGigs,
             totalEarnings: totalEarnings,
-            totalAttendees: totalAttendees
+            totalAttendees: totalAttendees,
+            unicDjs: unicDjsId.length
         };
     }
+
 
     datasetManagerAnalyticsData.push(dataset);
 }
 
 
 console.log("all data", datasetManagerAnalyticsData);
-
-
-///////////////
-
-// Beräkna statistik per år
-for (let managerData of datasetManagerAnalyticsData) {
-    console.log("Manager:", managerData.managerName);
-
-    let allDJs = [];
-
-    // Gå igenom varje år
-    for (let year in managerData.gigs) {
-        let gigsThisYear = managerData.gigs[year];
-        let totalEarnings = 0;
-        let totalAttendees = 0;
-        let uniqueDJsThisYear = [];
-
-        for (let gig of gigsThisYear) {
-            totalEarnings += gig.earning;
-            totalAttendees += gig.attendance;
-
-            if (gig.djId && !uniqueDJsThisYear.includes(gig.djId)) {
-                uniqueDJsThisYear.push(gig.djId);
-            }
-        }
-
-        // Lägg till i en lista för alla år om du vill ha alla DJs totalt
-        allDJs.push(...uniqueDJsThisYear);
-
-        console.log("allDjs", allDJs)
-        console.log(`År ${year} – ${uniqueDJsThisYear.length} unika DJs`);
-        console.log("DJ-ID:n:", uniqueDJsThisYear.join(", "));
-    }
-
-    // Om du vill visa totalt unika DJs över alla år för en manager
-    let uniqueAllDJs = [];
-    for (let djID of allDJs) {
-        if (!uniqueAllDJs.includes(djID)) {
-            uniqueAllDJs.push(djID);
-        }
-    }
-
-    console.log(`Manager ${managerData.managerName} jobbade totalt med ${uniqueAllDJs.length} unika DJs`);
-}
-
-
-
-
-
-///////////////////////
 
 
 const groupedByYear = [];
@@ -147,8 +109,8 @@ for (let year of allYears) {
             name: manager.managerName,
             earnings: summary?.totalEarnings || 0,
             gigs: summary?.totalGigs || 0,
-            attendees: summary?.totalAttendees || 0
-            // djs:
+            attendees: summary?.totalAttendees || 0,
+            djs: summary?.unicDjs || 0
         };
     });
 
@@ -161,89 +123,6 @@ for (let year of allYears) {
 
 console.log("groupbyYear", groupedByYear)
 
-
-
-
-
-
-// D3.js: skapa grundgraf
-
-// const graph1 = document.getElementById("graph1");
-// const graph2 = document.getElementById("graph2");
-// const graph3 = document.getElementById("graph3");
-
-// const svgWidth = 600;
-// const svgHeight = 400;
-// const paddingSides = 40;
-// const paddingBottom = 100;
-
-
-// const svg = d3.select(graph1)
-//     .append("svg")
-//     .attr("width", svgWidth)
-//     .attr("height", svgHeight);
-
-// const xScale = d3.scaleBand()
-//     .range([paddingSides, svgWidth - paddingSides])
-//     .padding(0.2);
-
-// const yScale = d3.scaleLinear()
-//     .range([svgHeight - paddingBottom, paddingSides]);
-
-// const xAxisGroup = svg.append("g")
-//     .attr("transform", `translate(0, ${svgHeight - paddingBottom})`);
-
-// const yAxisGroup = svg.append("g")
-//     .attr("transform", `translate(${paddingSides}, 0)`);
-
-// // Render initialt år (första i listan)
-// //skicka med en grafid här
-// updateBarChart(groupedByYear[0].year, "white");
-
-
-
-// function updateBarChart(selectedYear, color, graph) {
-//     const data = groupedByYear.find(d => d.year === selectedYear)?.managers || [];
-
-//     xScale.domain(data.map(d => d.name));
-//     yScale.domain([0, d3.max(data, d => d.gigs) || 1]); // undvik max 0
-
-//     const bars = svg.selectAll("rect").data(data, d => d.name);
-
-//     // Uppdatera existerande staplar
-//     bars.transition()
-//         .duration(500)
-//         .attr("x", d => xScale(d.name))
-//         .attr("y", d => yScale(d.gigs))
-//         .attr("width", xScale.bandwidth())
-//         .attr("height", d => svgHeight - paddingBottom - yScale(d.gigs))
-//         .attr("fill", color);
-
-//     // Lägg till nya staplar
-//     bars.enter()
-//         .append("rect")
-//         .attr("x", d => xScale(d.name))
-//         .attr("y", yScale(0))
-//         .attr("width", xScale.bandwidth())
-//         .attr("height", 0)
-//         .attr("fill", color)
-//         .transition()
-//         .duration(500)
-//         .attr("y", d => yScale(d.gigs))
-//         .attr("height", d => svgHeight - paddingBottom - yScale(d.gigs));
-
-//     // Ta bort gamla staplar
-//     bars.exit()
-//         .transition()
-//         .duration(300)
-//         .attr("y", yScale(0))
-//         .attr("height", 0)
-//         .remove();
-
-//     // Uppdatera axlar
-//     xAxisGroup.call(d3.axisBottom(xScale));
-//     yAxisGroup.call(d3.axisLeft(yScale));
-// }
 
 
 //Hämta alla grafID:s
@@ -356,7 +235,9 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
 
 const updateGigs = renderGraph(graph1, "gigs");
 const updateEarnings = renderGraph(graph2, "earnings");
+const updateCollaboration = renderGraph(graph3, "djs");
 const updateAttendees = renderGraph(graph4, "attendees");
+
 
 
 //Skapa knappar för varje år med renderButton()
@@ -371,6 +252,7 @@ groupedByYear.forEach(d => {
             updateGigs(year, selectedColor);
             updateEarnings(year, selectedColor);
             updateAttendees(year, selectedColor);
+            updateCollaboration(year, selectedColor)
         }
     );
 });
