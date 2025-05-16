@@ -3,6 +3,7 @@ footer {
     height: 245px;
     background-color: #121315;
     padding: 100px;
+    margin-top: 50px;
     color: white;
 
     display: flex;

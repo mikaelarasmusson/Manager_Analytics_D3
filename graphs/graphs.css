@@ -1,18 +1,15 @@
 #graphContainer {
     width: 100%;
-    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
-/* .graphDivContainer {
-    height: 25%;
-} */
-
-.graphDivContainer div {
-    /* width: 80%; */
-    /* height: 50%; */
-    border: 1px solid limegreen;
-}
 
 .graphDivContainer p {
+    margin-bottom: 10px;
+    font-family: "quantico-regular";
     color: #fff;
+
 }
+

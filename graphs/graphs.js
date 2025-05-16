@@ -1,8 +1,5 @@
-
-
-
 function renderGraphsContainer(parent) {
-    let parentId = document.getElementById("mainContainer");
+    let parentId = document.getElementById(parent);
 
     let container = document.createElement("div");
     container.id = "graphContainer";
@@ -31,3 +28,7 @@ function renderGraphsContainer(parent) {
 }
 
 renderGraphsContainer("mainContainer");
+
+
+
+

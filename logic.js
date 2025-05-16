@@ -4,13 +4,6 @@ const managerCompilation = [
     { managerName: "", gender: "", ethnicity: "", age: "", bookedGigs: "", totalEarnings: "", bookedDJs: "", totalAttendees: "" }
 ];
 
-// let managerID = Managers.map(element => element.id);
-// let managerName = Managers.map(element => element.name);
-// console.log(managerID);
-// console.log(managerName);
-// const bookedGigsDataset = [
-//     {managerID: "", managerName: "", djID: "", numberOfGigs: "", year: "", specificSumOfGigs: ""}
-// ];
 
 // Filtrera fram managers som är kopplade till en DJ
 for (let manager of Managers) {
@@ -61,8 +54,6 @@ for (let manager of Managers) {
     }
 
 
-
-
     // Beräkna statistik per år
     for (let year in dataset.gigs) {
         let gigsThisYear = dataset.gigs[year];
@@ -87,7 +78,6 @@ for (let manager of Managers) {
             unicDjs: unicDjsId.length
         };
     }
-
 
     datasetManagerAnalyticsData.push(dataset);
 }
@@ -121,8 +111,7 @@ for (let year of allYears) {
 }
 
 
-console.log("groupbyYear", groupedByYear)
-
+console.log("groupbyYear", groupedByYear);
 
 
 //Hämta alla grafID:s
@@ -134,8 +123,8 @@ const graph4 = document.getElementById("graph4");
 //Definiera grafikens mått och padding
 const svgWidth = 600;
 const svgHeight = 400;
-const paddingSides = 40;
-const paddingBottom = 100;
+const paddingSides = 70;
+const paddingBottom = 70;
 
 //Skapa en färgkarta för varje år
 const colorMap = {
@@ -151,15 +140,31 @@ const colorMap = {
     "2024": ["#AEFF00", "#689801"]
 };
 
+
+
 function renderGraph(parent, metric) {
+
+    //Rita första grafen med första årets data och färg
+    const firstYear = groupedByYear[0].year;
+    const [, initialColor] = colorMap[firstYear];
+
     const svg = d3.select(parent)
         .append("svg")
         .attr("width", svgWidth)
         .attr("height", svgHeight);
 
 
-    //skapa skalor och axlar
+    svg.append("text")
+        .attr("x", svgWidth - 40)
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .attr("fill", initialColor)
+        .attr("font-size", "24px")
+        .attr("font-family", "quantico-bold")
+        .text(firstYear);
 
+
+    //skapa skalor och axlar
     const xScale = d3.scaleBand()
         .range([paddingSides, svgWidth - paddingSides])
         .padding(0.2);
@@ -168,15 +173,27 @@ function renderGraph(parent, metric) {
         .range([svgHeight - paddingBottom, paddingSides]);
 
     const xAxisGroup = svg.append("g")
-        .attr("transform", `translate(0, ${svgHeight - paddingBottom})`);
+        .attr("transform", `translate(0, ${svgHeight - paddingBottom})`)
 
     const yAxisGroup = svg.append("g")
-        .attr("transform", `translate(${paddingSides}, 0)`);
+        .attr("transform", `translate(${paddingSides}, 0)`)
 
-    //Rita första grafen med första årets data och färg
-    const firstYear = groupedByYear[0].year;
-    const [, initialColor] = colorMap[firstYear];
     updateBarChart(firstYear, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, initialColor);
+
+    xAxisGroup.selectAll("path, line").attr("stroke", "white");
+    xAxisGroup.selectAll("text").attr("fill", "white")
+        .attr("transform", "rotate(-40)")
+        .attr("text-anchor", "end")
+        .attr("dy", "0.25em");
+
+    // Ändra färg på Y-axelns linjer och text
+    yAxisGroup.selectAll("path, line").attr("stroke", "white");
+    yAxisGroup.selectAll("text").attr("fill", "white");
+
+    document.getElementById("graph1").style.border = `2px solid ${initialColor}`
+    document.getElementById("graph2").style.border = `2px solid ${initialColor}`
+    document.getElementById("graph3").style.border = `2px solid ${initialColor}`
+    document.getElementById("graph4").style.border = `2px solid ${initialColor}`
 
     // Den returnerar en funktion som tar två argument: year och color, och anropar funktionen updateBarChart(...)
     // med dessa samt andra parametrar som redan finns i kontexten (t.ex. xScale, yScale, svg, metric osv).
@@ -197,6 +214,8 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
 
     const bars = svg.selectAll("rect").data(data, d => d.name);
 
+    svg.select("text").attr("fill", color).text(selectedYear);
+
     bars.transition()
         .duration(500)
         .attr("x", d => xScale(d.name))
@@ -215,7 +234,8 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
         .transition()
         .duration(500)
         .attr("y", d => yScale(d[metric]))
-        .attr("height", d => svgHeight - paddingBottom - yScale(d[metric]));
+        .attr("height", d => svgHeight - paddingBottom - yScale(d[metric]))
+
 
     // Ta bort staplar som inte längre behövs.
     bars.exit()
@@ -227,6 +247,16 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
 
     xAxisGroup.call(d3.axisBottom(xScale));
     yAxisGroup.call(d3.axisLeft(yScale));
+
+
+    xAxisGroup.selectAll("path, line").attr("stroke", "white");
+    xAxisGroup.selectAll("text").attr("fill", "white")
+        .attr("transform", "rotate(-40)")
+        .attr("text-anchor", "end")
+        .attr("dy", "0.25em");
+
+    yAxisGroup.selectAll("path, line").attr("stroke", "white");
+    yAxisGroup.selectAll("text").attr("fill", "white");
 }
 
 
@@ -253,9 +283,20 @@ groupedByYear.forEach(d => {
             updateEarnings(year, selectedColor);
             updateAttendees(year, selectedColor);
             updateCollaboration(year, selectedColor)
+
+            document.getElementById("graph1").style.border = `2px solid ${selectedColor}`
+            document.getElementById("graph2").style.border = `2px solid ${selectedColor}`
+            document.getElementById("graph3").style.border = `2px solid ${selectedColor}`
+            document.getElementById("graph4").style.border = `2px solid ${selectedColor}`
         }
     );
 });
+
+//sammanställnings-knapp
+const buttonCompilation = document.createElement("button");
+buttonCompilation.id = "buttonCompilation";
+buttonCompilation.textContent = "Sammanställning";
+buttonContainer.appendChild(buttonCompilation);
 
 
 
