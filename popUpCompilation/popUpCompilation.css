@@ -1,0 +1,31 @@
+#compilationContainer {
+    position: absolute;
+    top: 100vh;
+    left: 19vw;
+    z-index: 999;
+
+    width: 60vw;
+    height: 47vh;
+
+    border-radius: 20px;
+    border: 2px solid #FF7EFF;
+    background: #1A1A1A;
+    box-shadow: 4px 4px 20px 2px #FF5CB3;
+}
+
+#compilationContent {
+    margin: 2.75rem 0 0 3rem;
+}
+
+.title {
+    color: #FF7EFF;
+    font-family: quantico-bold;
+    font-size: 1.25rem;
+}
+
+.infoText {
+    color: #FFF;
+    font-family: quantico-regular;
+    font-size: 1rem;
+    line-height: 30px; /* 187.5% */
+}
