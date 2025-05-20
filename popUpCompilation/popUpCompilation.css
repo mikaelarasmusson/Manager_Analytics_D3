@@ -5,7 +5,6 @@
     z-index: 999;
 
     width: 60vw;
-    height: 47vh;
 
     border-radius: 20px;
     border: 2px solid #FF7EFF;
@@ -14,10 +13,11 @@
 }
 
 #compilationContent {
-    margin: 2.75rem 0 0 3rem;
+    margin: 0 2.75rem 2rem 3rem;
 }
 
 .title {
+    margin: 0 0 1rem 0;
     color: #FF7EFF;
     font-family: quantico-bold;
     font-size: 1.25rem;
@@ -28,4 +28,27 @@
     font-family: quantico-regular;
     font-size: 1rem;
     line-height: 30px; /* 187.5% */
+}
+
+#managerButtonsContainer {
+    margin: 0rem 1.8rem 2.75rem 1.8rem;
+}
+
+.managerButtons {
+    margin: 0.5rem 1rem;
+    width: 10.5rem;
+    height: 1.75rem;
+
+    border: none;
+    border-radius: 10px;
+    background: #FF83FB;
+    box-shadow: 2px 2px 8px 0px #9B409B;
+    color: #FFF;
+    font-family: quantico-regular;
+    font-size: 1rem;
+}
+
+#closeButton {
+    margin-left: 56vw;
+    margin-top: 3vh;
 }

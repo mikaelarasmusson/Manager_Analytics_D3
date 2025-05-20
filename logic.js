@@ -8,6 +8,7 @@ for (let manager of Managers) {
     const managerAge = manager.age;
     const managerGender = manager.gender;
     const managerEthnicity = manager.ethnicity;
+    const managerImg = manager.img;
 
     const dataset = {
         managerId: managerId,
@@ -15,6 +16,7 @@ for (let manager of Managers) {
         managerAge: managerAge,
         managerGender: managerGender,
         managerEthnicity: managerEthnicity,
+        managerImg: managerImg,
         gigs: {
             "2015": [],
             "2016": [],
