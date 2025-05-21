@@ -36,7 +36,7 @@ function renderPopupManagerSummary (parent, managerName, year) {
     <p class="managerStats">🎵 Gigs bokade: ${totalGigs}</p>
     <p class="managerStats">💰 Totala intäkter: ${totalEarnings} SEK</p>
     <p class="managerStats">🎤 DJs bokade: ${unicDjs}</p>
-    <p class="managerStats">👥 Publik: ${totalAttendees}</p>
+    <p class="managerStats">👥 Total publik: ${totalAttendees}</p>
     <p class="managerStats">⚖️ Genomsnittlig inkomst/gig: ${totalGigs === 0 ? 0 : (totalEarnings / totalGigs).toFixed(0)} SEK</p>
     `;
     popupCompilationContainerSummary.appendChild(managerContent);
