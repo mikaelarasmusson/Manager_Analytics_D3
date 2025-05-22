@@ -31,7 +31,6 @@ for (let manager of Managers) {
     };
 
     let djCollaboration = DJs.filter(dj => dj.managerID === managerId);
-    console.log("DJ-manager collab use filter", djCollaboration)
 
     if (djCollaboration.length == 0) continue;
 
