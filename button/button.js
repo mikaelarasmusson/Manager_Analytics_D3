@@ -20,7 +20,6 @@ function renderButton(year, defaultColor, selectedColor, onClick) {
     button.textContent = year;
     button.style.backgroundColor = defaultColor;
 
-    // Spara färger i dataset
     button.dataset.defaultColor = defaultColor;
     button.dataset.selectedColor = selectedColor;
     button.dataset.year = year;
@@ -28,18 +27,13 @@ function renderButton(year, defaultColor, selectedColor, onClick) {
     buttonContainer.appendChild(button);
 
     button.addEventListener("click", () => {
-        // Återställ alla knappar i containern till sina default-färger
         const allButtons = buttonContainer.querySelectorAll("button");
         allButtons.forEach(btn => {
             btn.style.backgroundColor = btn.dataset.defaultColor;
         });
 
-        // Färga den klickade knappen med sin selectedColor
         button.style.backgroundColor = selectedColor;
 
-        console.log(year)
-
-        // Uppdatera diagrammet
         onClick(year, selectedColor);
     });
 }

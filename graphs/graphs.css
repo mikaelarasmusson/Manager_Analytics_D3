@@ -5,6 +5,15 @@
     gap: 30px;
 }
 
+.graphDivContainer {
+    width: 100%;
+}
+
+#graph1, #graph2, #graph3, #graph4 {
+    display: flex;
+    justify-content: center;
+}
+
 
 .graphDivContainer p {
     margin-bottom: 10px;
