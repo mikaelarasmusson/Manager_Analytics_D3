@@ -5,7 +5,7 @@ const managerCompilation = [
 ];
 
 
-// Filtrera fram managers som är kopplade till en DJ
+// Filtrera fram managers som är kopplade till en DJ och deras gigs filtrerad efter årtal 2015-2024
 for (let manager of Managers) {
     const managerId = manager.id;
     const managerName = manager.name;
@@ -29,12 +29,9 @@ for (let manager of Managers) {
     };
 
     let djCollaboration = DJs.filter(dj => dj.managerID === managerId);
-    console.log("find", djCollaboration)
+    console.log("DJ-manager collab use filter", djCollaboration)
+
     if (djCollaboration.length == 0) continue;
-
-    // let managerGigs = Gigs.filter(gig => gig.djID === djCollaboration.id);
-
-    let allManagersGigs = [];
 
     for (let dj of djCollaboration) {
         let gigsForThisDj = Gigs.filter(gig => gig.djID == dj.id)
@@ -54,7 +51,7 @@ for (let manager of Managers) {
     }
 
 
-    // Beräkna statistik per år
+    // ta ut relevanta data till frågestälnningar
     for (let year in dataset.gigs) {
         let gigsThisYear = dataset.gigs[year];
         let amountOfGigs = gigsThisYear.length;
@@ -222,10 +219,49 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
         .attr("y", d => yScale(d[metric]))
         .attr("width", xScale.bandwidth())
         .attr("height", d => svgHeight - paddingBottom - yScale(d[metric]))
-        .attr("fill", color);
+        .attr("fill", color)
+        .attr("data-original-fill", color);
 
     bars.enter()
         .append("rect")
+        .on("mouseover", function (event, d) {
+            const currentColor = d3.select(this).attr("data-original-fill");
+            // Mörka ner övriga staplar och ljusa upp den hovered stapeln
+            d3.select(this.parentNode).selectAll("rect")
+                .transition().duration(200)
+                .attr("fill", bar => bar.name === d.name
+                    ? d3.color(currentColor).brighter(1)
+                    : d3.color(currentColor).darker(1.5));
+
+            // Lägg till text (även om värdet är 0)
+            d3.select(this.parentNode)
+                .append("text")
+                .attr("class", "bar-value")
+                .attr("x", xScale(d.name) + xScale.bandwidth() / 2)
+                .attr("y", yScale(d[metric]) - 10)
+                .attr("opacity", 0)
+                .attr("text-anchor", "middle")
+                .attr("fill", "white")
+                .attr("font-size", "14px")
+                .text(d[metric])
+                .transition()
+                .duration(200)
+                .attr("opacity", 1);
+        }).on("mouseout", function (event, d) {
+            // Återställ alla staplars färg till deras original
+            d3.select(this.parentNode).selectAll("rect")
+                .transition().duration(200)
+                .attr("fill", function () {
+                    return d3.select(this).attr("data-original-fill");
+                });
+
+            // Ta bort textetiketter
+            d3.select(this.parentNode).selectAll(".bar-value")
+                .transition()
+                .duration(200)
+                .attr("opacity", 0)
+                .remove();
+        })
         .attr("x", d => xScale(d.name))
         .attr("y", yScale(0))
         .attr("width", xScale.bandwidth())
@@ -233,9 +269,28 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
         .attr("fill", color)
         .transition()
         .duration(500)
+        .attr("x", d => xScale(d.name))
         .attr("y", d => yScale(d[metric]))
+        .attr("width", xScale.bandwidth())
         .attr("height", d => svgHeight - paddingBottom - yScale(d[metric]))
+        .attr("fill", color)
+        .attr("data-original-fill", color);
 
+    // Ta bort gamla etiketter för 0-värden
+    svg.selectAll(".zero-label").remove();
+
+    // Lägg till nya etiketter för staplar med värdet 0
+    svg.selectAll(".zero-label")
+        .data(data.filter(d => d[metric] === 0), d => d.name)
+        .enter()
+        .append("text")
+        .attr("class", "zero-label")
+        .attr("x", d => xScale(d.name) + xScale.bandwidth() / 2)
+        .attr("y", d => yScale(d[metric]) - 10)
+        .attr("text-anchor", "middle")
+        .attr("fill", "white")
+        .attr("font-size", "14px")
+        .text("0");
 
     // Ta bort staplar som inte längre behövs.
     bars.exit()
