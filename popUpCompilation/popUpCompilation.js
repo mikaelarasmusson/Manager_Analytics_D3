@@ -42,20 +42,15 @@ function renderPopupCompilationContainer(parent, year) {
         managerButton.textContent = mgr.name;
         managerButton.onclick = () => {
             popupCompilationContainer.remove();
-            // Lägg till blur på wrapper
             document.getElementById("wrapper").classList.add("blur");
 
-            // Skapa overlay
             const overlay = document.createElement("div");
             overlay.id = "popupOverlay";
 
-            // Lägg till i body (inte i wrapper!)
             document.body.appendChild(overlay);
 
-            // Rendera popup i overlay
             renderPopupManagerSummary("popupOverlay", mgr.name, year);
 
-            // Förhindra scroll
             document.body.classList.add("noScroll");
         };
         managerButtonsContainer.appendChild(managerButton);
