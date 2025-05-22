@@ -83,6 +83,8 @@ function renderPopupManagerSummary (parent, managerName, year) {
     popupCompilationContainerSummary.appendChild(closePopupButton);
 
     closePopupButton.addEventListener("click", () => {
+        document.getElementById("wrapper").classList.remove("blur");
+        document.body.classList.remove("noScroll");
         popupCompilationContainerSummary.remove();
     });
 }
