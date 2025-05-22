@@ -22,7 +22,14 @@ function renderPopupManagerSummary (parent, managerName, year) {
     const unicDjs = summary.unicDjs;
     const totalAttendees = summary.totalAttendees;
     const totalEarnings = summary.totalEarnings;
-    const maxEarningsManager = managerData.maxEarningsManager;
+    // Hitta managern med högst intäkter för det valda året
+    const maxEarningsData = datasetManagerAnalyticsData.reduce((max, manager) => {
+        const earnings = manager.summary[year]?.totalEarnings || 0;
+        if (earnings > max.earnings) {
+            return { name: manager.managerName, earnings };
+        }
+        return max;
+    }, { name: null, earnings: 0 });
     
     let managerContent = document.createElement("div");
     managerContent.id = "managerContent";
@@ -51,7 +58,7 @@ function renderPopupManagerSummary (parent, managerName, year) {
     `;
     popupCompilationContainerSummary.appendChild(yearTextContainer);
 
-    if (managerData.managerName === maxEarningsManager.managerName) {
+    if (managerData.managerName === maxEarningsData.name) {
         yearTextContainer.innerHTML += `
             <div class="trophy">
                 <svg xmlns="http://www.w3.org/2000/svg" width="85" height="93" viewBox="0 0 85 93" fill="none">
