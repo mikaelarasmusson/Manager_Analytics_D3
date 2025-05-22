@@ -7,7 +7,7 @@ function renderGraphsContainer(parent) {
 
     let contentArray = [
         { graphID: "graph1", graphText: "Hur många gigs bokade varje manager under det valda året?" },
-        { graphID: "graph2", graphText: "Hur mycket intäkter genererade varje manager under det valda året?" },
+        { graphID: "graph2", graphText: "Hur mycket intäkter genererade varje manager under det valda året? (SEK)" },
         { graphID: "graph3", graphText: "Hur många olika DJs har managern jobbat med under året? (Antal DJs)" },
         { graphID: "graph4", graphText: "Hur stor totalpublik drog varje manager under det valda året? (Med hjälp av sina DJs)" },
     ];
