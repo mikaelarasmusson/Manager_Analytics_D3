@@ -217,10 +217,3 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
     yAxisGroup.selectAll("path, line").attr("stroke", "white");
     yAxisGroup.selectAll("text").attr("fill", "white");
 }
-
-
-
-
-
-
-
