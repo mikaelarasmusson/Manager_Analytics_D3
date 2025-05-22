@@ -1,18 +1,22 @@
 const datasetManagerAnalyticsData = [];
 
-const managerCompilation = [
-    { managerName: "", gender: "", ethnicity: "", age: "", bookedGigs: "", totalEarnings: "", bookedDJs: "", totalAttendees: "" }
-];
-
 
 // Filtrera fram managers som är kopplade till en DJ och deras gigs filtrerad efter årtal 2015-2024
 for (let manager of Managers) {
     const managerId = manager.id;
     const managerName = manager.name;
+    const managerAge = manager.age;
+    const managerGender = manager.gender;
+    const managerEthnicity = manager.ethnicity;
+    const managerImg = manager.img;
 
     const dataset = {
         managerId: managerId,
         managerName: managerName,
+        managerAge: managerAge,
+        managerGender: managerGender,
+        managerEthnicity: managerEthnicity,
+        managerImg: managerImg,
         gigs: {
             "2015": [],
             "2016": [],
@@ -44,7 +48,6 @@ for (let manager of Managers) {
                     earning: gig.managerEarnings,
                     attendance: gig.attendance,
                     djId: gig.djID
-
                 });
             }
         }
@@ -94,6 +97,9 @@ for (let year of allYears) {
         const summary = manager.summary[year];
         return {
             name: manager.managerName,
+            age: manager.managerAge,
+            gender: manager.managerGender,
+            ethnicity: manager.managerEthnicity,
             earnings: summary?.totalEarnings || 0,
             gigs: summary?.totalGigs || 0,
             attendees: summary?.totalAttendees || 0,
@@ -106,6 +112,8 @@ for (let year of allYears) {
         managers: managers
     });
 }
+
+let currentYear = groupedByYear[0].year;
 
 
 console.log("groupbyYear", groupedByYear);
@@ -334,6 +342,7 @@ groupedByYear.forEach(d => {
         defaultColor,
         selectedColor,
         (year) => {
+            currentYear = year;
             updateGigs(year, selectedColor);
             updateEarnings(year, selectedColor);
             updateAttendees(year, selectedColor);
@@ -351,18 +360,7 @@ groupedByYear.forEach(d => {
 const buttonCompilation = document.createElement("button");
 buttonCompilation.id = "buttonCompilation";
 buttonCompilation.textContent = "Sammanställning";
+buttonCompilation.addEventListener("click", () => {
+    renderPopupCompilationContainer("wrapper", currentYear);
+});
 buttonContainer.appendChild(buttonCompilation);
-
-
-
-
-
-
-
-
-
-
-
-
-
-

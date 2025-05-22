@@ -1,0 +1,74 @@
+#compilationContainerSummary {
+    position: absolute;
+    top: 100vh;
+    left: 19vw;
+    z-index: 999;
+
+    width: 64vw;
+    display: flex;
+
+    border-radius: 20px;
+    border: 2px solid #FF7EFF;
+    background: #1A1A1A;
+    box-shadow: 4px 4px 20px 2px #FF5CB3;
+}
+
+#managerContent {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 6rem;
+    margin-left: 2rem;
+    gap: 5px;
+}
+
+#managerImgContainer {
+    width: 370px;
+    height: 600px;
+}
+
+.managerPic {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px 0 0 20px;
+}
+
+#closeButtonSummary {
+    margin-top: 2.5vh;
+    position: absolute;
+    z-index: 1000;
+    margin-left: 60vw;
+}
+
+.managerNameText {
+    color: #FFF;
+    font-family: quantico-bold;
+    font-size: 1.75rem;
+    margin-bottom: 10px;
+}
+
+.personalInfo {
+    color: #FFF;
+    font-family: quantico-regular;
+    font-size: 1rem;
+}
+
+.borderLine {
+    border: 1px solid #FF7EFF;
+    width: 120%;
+    margin: 30px 0 30px 0;
+}
+
+.managerStats {
+    color: #FFF;
+    font-family: quantico-regular;
+    font-size: 1.25rem;
+}
+
+.yearText {
+    margin-top: 6rem;
+
+    color: #FFF;
+    font-family: quantico-bold;
+    font-size: 1.75rem;
+}

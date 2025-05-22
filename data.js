@@ -27,16 +27,16 @@ const Cities = [
 ];
 
 const Managers = [
-  {"id":1323,"name":"Fatima Johansson"},
-  {"id":1609,"name":"Kerstin Rodriguez"},
-  {"id":1656,"name":"Maja Shankar"},
-  {"id":3151,"name":"Mahan Nilsson"},
-  {"id":6643,"name":"Karl Petrovic"},
-  {"id":7787,"name":"Sara Shirzad"},
-  {"id":7836,"name":"Omar Wennström"},
-  {"id":7909,"name":"Tomek Garcia"},
-  {"id":8370,"name":"Ivan Holmberg"},
-  {"id":9597,"name":"Stella Dudek"}
+  {"id":1323,"name":"Fatima Johansson", "age": 34, "gender": "theta", "ethnicity": "tau", "img": "assets/images/manager_fatima.jpeg"},
+  {"id":1609,"name":"Kerstin Rodriguez", "age": 56, "gender": "lambda", "ethnicity": "tau", "img": "assets/images/manager_kerstin.jpeg"},
+  {"id":1656,"name":"Maja Shankar", "age": 25, "gender": "theta", "ethnicity": "psi", "img": "assets/images/manager_maja.jpeg"},
+  {"id":3151,"name":"Mahan Nilsson", "age": 32, "gender": "omicron", "ethnicity": "rho", "img": "assets/images/manager_mahan.jpeg"},
+  {"id":6643,"name":"Karl Petrovic", "age": 44, "gender": "lambda", "ethnicity": "psi", "img": "assets/images/manager_karl.jpeg"},
+  {"id":7787,"name":"Sara Shirzad", "age": 28, "gender": "omicron", "ethnicity": "rho", "img": "assets/images/manager_sara.jpeg"},
+  {"id":7836,"name":"Omar Wennström", "age": 30, "gender": "lambda", "ethnicity": "rho", "img": "assets/images/manager_omar.jpeg"},
+  {"id":7909,"name":"Tomek Garcia", "age": 36, "gender": "theta", "ethnicity": "tau", "img": "assets/images/manager_tomek.jpeg"},
+  {"id":8370,"name":"Ivan Holmberg", "age": 52, "gender": "omicron", "ethnicity": "psi", "img": "assets/images/manager_ivan.jpeg"},
+  {"id":9597,"name":"Stella Dudek", "age": 41, "gender": "theta", "ethnicity": "tau", "img": "assets/images/manager_stella.jpeg"}
 ];
 
 const Producers = [
