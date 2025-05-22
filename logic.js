@@ -142,6 +142,32 @@ const buttonCompilation = document.createElement("button");
 buttonCompilation.id = "buttonCompilation";
 buttonCompilation.textContent = "Sammanställning";
 buttonCompilation.addEventListener("click", () => {
-    renderPopupCompilationContainer("wrapper", currentYear);
+  const wrapper = document.getElementById("wrapper");
+  const contentContainer = document.createElement("div");
+  contentContainer.id = "contentContainer";
+  wrapper.appendChild(contentContainer);
+  contentContainer.classList.add("blur");
+  contentContainer.classList.add("noScroll");
+  // move the content of #wrapper to #contentContainer
+  while (wrapper.firstChild) {
+    contentContainer.appendChild(wrapper.firstChild);
+  }
+  renderPopupCompilationContainer("wrapper", currentYear);
 });
 buttonContainer.appendChild(buttonCompilation);
+
+
+let maxEarningsManager = null;
+let maxEarnings = 0;
+
+datasetManagerAnalyticsData.forEach((manager) => {
+  const summary = manager.summary[currentYear];
+  if (summary && summary.totalEarnings > maxEarnings) {
+    maxEarnings = summary.totalEarnings;
+    maxEarningsManager = manager;
+  }
+});
+
+datasetManagerAnalyticsData.forEach((manager) => {
+  manager.maxEarningsManager = maxEarningsManager;
+});
