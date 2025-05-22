@@ -142,32 +142,37 @@ const buttonCompilation = document.createElement("button");
 buttonCompilation.id = "buttonCompilation";
 buttonCompilation.textContent = "Sammanställning";
 buttonCompilation.addEventListener("click", () => {
-  const wrapper = document.getElementById("wrapper");
-  const contentContainer = document.createElement("div");
-  contentContainer.id = "contentContainer";
-  wrapper.appendChild(contentContainer);
-  contentContainer.classList.add("blur");
-  contentContainer.classList.add("noScroll");
-  // move the content of #wrapper to #contentContainer
-  while (wrapper.firstChild) {
-    contentContainer.appendChild(wrapper.firstChild);
-  }
-  renderPopupCompilationContainer("wrapper", currentYear);
+    // Lägg till blur på wrapper
+    document.getElementById("wrapper").classList.add("blur");
+
+    // Skapa overlay
+    const overlay = document.createElement("div");
+    overlay.id = "popupOverlay";
+
+    // Lägg till i body (inte i wrapper!)
+    document.body.appendChild(overlay);
+
+    // Rendera popup i overlay
+    renderPopupCompilationContainer("popupOverlay", currentYear);
+
+    // Förhindra scroll
+    document.body.classList.add("noScroll");
 });
 buttonContainer.appendChild(buttonCompilation);
+
 
 
 let maxEarningsManager = null;
 let maxEarnings = 0;
 
 datasetManagerAnalyticsData.forEach((manager) => {
-  const summary = manager.summary[currentYear];
-  if (summary && summary.totalEarnings > maxEarnings) {
-    maxEarnings = summary.totalEarnings;
-    maxEarningsManager = manager;
-  }
+    const summary = manager.summary[currentYear];
+    if (summary && summary.totalEarnings > maxEarnings) {
+        maxEarnings = summary.totalEarnings;
+        maxEarningsManager = manager;
+    }
 });
 
 datasetManagerAnalyticsData.forEach((manager) => {
-  manager.maxEarningsManager = maxEarningsManager;
+    manager.maxEarningsManager = maxEarningsManager;
 });

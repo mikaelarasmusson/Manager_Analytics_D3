@@ -1,4 +1,4 @@
-function renderPopupCompilationContainer (parent, year) {
+function renderPopupCompilationContainer(parent, year) {
     const wrapper = document.getElementById(parent);
 
     let popupCompilationContainer = document.createElement("div");
@@ -15,6 +15,7 @@ function renderPopupCompilationContainer (parent, year) {
     popupCompilationContainer.appendChild(closePopupButton);
 
     closePopupButton.addEventListener("click", () => {
+        document.getElementById("wrapper").classList.remove("blur");
         popupCompilationContainer.remove();
     });
 
@@ -41,9 +42,9 @@ function renderPopupCompilationContainer (parent, year) {
         managerButton.onclick = () => {
             popupCompilationContainer.remove();
             renderPopupManagerSummary("wrapper", mgr.name, year)
-        }; // Funktion du definierar separat
+        };
         managerButtonsContainer.appendChild(managerButton);
     });
 
-    popupCompilationContainer.appendChild(managerButtonsContainer); // Inuti popupen
+    popupCompilationContainer.appendChild(managerButtonsContainer);
 }
