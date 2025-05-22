@@ -231,8 +231,3 @@ datasetManagerAnalyticsData.forEach((manager) => {
         maxEarningsManager = manager;
     }
 });
-
-// Lägger till en ny egenskap på varje manager-objekt med referens till managern med högst intäkter.
-datasetManagerAnalyticsData.forEach((manager) => {
-    manager.maxEarningsManager = maxEarningsManager;
-});
