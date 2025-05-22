@@ -250,14 +250,25 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
         .attr("height", 0)
         .remove();
 
+    // I D3 används .call() för att använda en funktion på ett selection.
+    // Skapar en automatisk axel baserat på ett band-scale (xScale).
+    // "Bottom" betyder att fästpunkten är i botten (passar för stapeldiagram).
+    // xScale innehåller kategorier som namn på managers.
+    // Instruerar D3 att fästa denna axel i <g>-elementet som representerar x-axeln.
     xAxisGroup.call(d3.axisBottom(xScale));
     yAxisGroup.call(d3.axisLeft(yScale)
+        // Försöker rita ungefär 5 stycken tick-märken (streck + siffror).
         .ticks(5))
 
+    // Ändrar färgen på själva axellinjen och strecken (ticks) till vitt.
     xAxisGroup.selectAll("path, line").attr("stroke", "white");
+    // Gör att textetiketterna (t.ex. manager-namn) får vit färg.
     xAxisGroup.selectAll("text").attr("fill", "white")
+        // Roterar x-axelns textetiketter 40 grader uppåt.
+        // Görs för att undvika att långa namn krockar.
         .attr("transform", "rotate(-40)")
         .attr("text-anchor", "end")
+        // Finjusterar vertikal position på texten så att den inte "hänger fel".
         .attr("dy", "0.25em");
 
     yAxisGroup.selectAll("path, line").attr("stroke", "white");
