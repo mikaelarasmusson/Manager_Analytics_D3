@@ -142,20 +142,16 @@ const buttonCompilation = document.createElement("button");
 buttonCompilation.id = "buttonCompilation";
 buttonCompilation.textContent = "Sammanställning";
 buttonCompilation.addEventListener("click", () => {
-    // Lägg till blur på wrapper
+
     document.getElementById("wrapper").classList.add("blur");
 
-    // Skapa overlay
     const overlay = document.createElement("div");
     overlay.id = "popupOverlay";
 
-    // Lägg till i body (inte i wrapper!)
     document.body.appendChild(overlay);
 
-    // Rendera popup i overlay
     renderPopupCompilationContainer("popupOverlay", currentYear);
 
-    // Förhindra scroll
     document.body.classList.add("noScroll");
 });
 buttonContainer.appendChild(buttonCompilation);
