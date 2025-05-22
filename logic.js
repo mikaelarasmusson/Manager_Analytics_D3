@@ -134,15 +134,15 @@ const paddingBottom = 70;
 //Skapa en färgkarta för varje år
 const colorMap = {
     "2015": ["#FF7EFF", "#EF00EF"],
-    "2016": ["#7EFF8D", "#00C217"],
+    "2016": ["#6CBC40", "#519E27"],
     "2017": ["#FF7E7E", "#CD3838"],
     "2018": ["#7EABFF", "#3064C5"],
-    "2019": ["#FFE37E", "#EFC839"],
-    "2020": ["#7EFFF9", "#4ED2CB"],
+    "2019": ["#FFC800", "#D0A300"],
+    "2020": ["#10CAC1", "#129E97"],
     "2021": ["#967EFF", "#5342A3"],
     "2022": ["#FF2428", "#B30C0F"],
     "2023": ["#FF5CB3", "#C60C6F"],
-    "2024": ["#AEFF00", "#689801"]
+    "2024": ["#8FCE09", "#679800"],
 };
 
 
@@ -361,6 +361,32 @@ const buttonCompilation = document.createElement("button");
 buttonCompilation.id = "buttonCompilation";
 buttonCompilation.textContent = "Sammanställning";
 buttonCompilation.addEventListener("click", () => {
-    renderPopupCompilationContainer("wrapper", currentYear);
+  const wrapper = document.getElementById("wrapper");
+  const contentContainer = document.createElement("div");
+  contentContainer.id = "contentContainer";
+  wrapper.appendChild(contentContainer);
+  contentContainer.classList.add("blur");
+  contentContainer.classList.add("noScroll");
+  // move the content of #wrapper to #contentContainer
+  while (wrapper.firstChild) {
+    contentContainer.appendChild(wrapper.firstChild);
+  }
+  renderPopupCompilationContainer("wrapper", currentYear);
 });
 buttonContainer.appendChild(buttonCompilation);
+
+
+let maxEarningsManager = null;
+let maxEarnings = 0;
+
+datasetManagerAnalyticsData.forEach((manager) => {
+  const summary = manager.summary[currentYear];
+  if (summary && summary.totalEarnings > maxEarnings) {
+    maxEarnings = summary.totalEarnings;
+    maxEarningsManager = manager;
+  }
+});
+
+datasetManagerAnalyticsData.forEach((manager) => {
+  manager.maxEarningsManager = maxEarningsManager;
+});

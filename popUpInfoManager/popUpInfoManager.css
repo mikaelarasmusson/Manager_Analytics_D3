@@ -1,7 +1,7 @@
 #compilationContainerSummary {
-    position: absolute;
-    top: 100vh;
-    left: 19vw;
+    position: fixed;
+    top: 18%;
+    left: 18%;
     z-index: 999;
 
     width: 64vw;
@@ -55,7 +55,7 @@
 
 .borderLine {
     border: 1px solid #FF7EFF;
-    width: 120%;
+    width: 105%;
     margin: 30px 0 30px 0;
 }
 
@@ -65,10 +65,20 @@
     font-size: 1.25rem;
 }
 
+#yearTextContainer {
+    padding-left: 8rem;
+}
+
 .yearText {
     margin-top: 6rem;
 
     color: #FFF;
     font-family: quantico-bold;
     font-size: 1.75rem;
+}
+
+.highestIncomeYear {
+    color: #FFF;
+    font-family: quantico-regular;
+    font-size: 0.8rem;
 }
