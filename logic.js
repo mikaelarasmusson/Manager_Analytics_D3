@@ -17,6 +17,7 @@ for (let manager of Managers) {
     // En gigs-nyckel med ett objekt som i sin tur innehåller en array per år
     // En tom summary-nyckel som kommer innehålla statistik per år senare
     const dataset = {
+        // Skapar ett objekt som samlar all data för en specifik manager. Detta är grunden för hela analysen.
         managerId: managerId,
         managerName: managerName,
         managerAge: managerAge,
@@ -37,6 +38,7 @@ for (let manager of Managers) {
         },
         summary: {}
     };
+    console.log("dataset", dataset);
 
     // Filtrerar fram DJs som jobbar med managern
     // .filter() returnerar en ny array med DJs där managerID matchar den aktuella managerns ID.
@@ -47,7 +49,6 @@ for (let manager of Managers) {
     if (djCollaboration.length == 0) continue;
 
     // Hitta gigs för dessa DJs
-
     for (let dj of djCollaboration) {
         // För varje DJ – filtrera ut deras gigs.
         //.filter() returnerar en ny array där gig.djID == dj.id.
@@ -67,6 +68,8 @@ for (let manager of Managers) {
             }
         }
     }
+
+    console.log("dataset", dataset);
 
 
     // Skapa statistik och sammanfattning per år
@@ -89,7 +92,7 @@ for (let manager of Managers) {
 
             // Här används array-metoden .includes():
             // Returnerar true om ett värde redan finns i arrayen.
-            // I detta fall: kollar om DJ:n för detta gig redan redan har registrerats som unik för året.
+            // I detta fall: kollar om DJ:n för detta gig redan har registrerats som unik för året.
             if (!unicDjsId.includes(gig.djId)) {
                 // .push() lägger till DJ:ns ID i arrayen unicDjsId.
                 // Detta görs bara om ID:t inte redan finns (tack vare includes() ovan).
@@ -118,8 +121,17 @@ for (let manager of Managers) {
 // Gruppera data per år
 const groupedByYear = [];
 
-// Tar alla år som finns i första managerns sammanställning (Object.keys() ger en array av nycklar = årtal).
+// Den skapar en array med alla nycklar (keys) i summary-objektet för den första managern i datasetManagerAnalyticsData.
+// datasetManagerAnalyticsData[0] Detta hämtar första manager-objektet i arrayen datasetManagerAnalyticsData.
+// Varje objekt i denna array innehåller information om en specifik manager och deras gigs.
+// .summary
+// Varje manager har en summary-egenskap.
+// summary är ett objekt som innehåller sammanställningar av statistik per år, t.ex. hur många gigs de bokat varje år, hur mycket intäkter de dragit in, etc.
+// Object.keys() är en inbyggd JavaScript-metod som returnerar en array av nycklar (strängar) från ett objekt.
+// I det här fallet returnerar det t.ex. ["2019", "2020"].
+// Den färdiga arrayen sparas i en konstant med namnet allYears.
 const allYears = Object.keys(datasetManagerAnalyticsData[0].summary);
+console.log("allYears", allYears);
 
 // Sammanställ managers per år
 for (let year of allYears) {
@@ -127,6 +139,7 @@ for (let year of allYears) {
     let managers = datasetManagerAnalyticsData.map(manager => {
         const summary = manager.summary[year];
         // Här används chaining med optional chaining (?.):
+        // Optional chaining är en funktion i JavaScript som gör koden säkrare och mer läsbar när man jobbar med objekt som kanske returnerar undefined eller null.
         // summary?.totalEarnings betyder:
         // Om summary är undefined (t.ex. inget gig det året) så blir det inte ett fel, utan bara undefined.
         // || 0 gör att det istället blir 0.
@@ -157,6 +170,8 @@ for (let year of allYears) {
         managers: managers
     });
 }
+
+console.log("groupedByYear", groupedByYear);
 
 // Sätt det aktuella året för visning
 let currentYear = groupedByYear[0].year;
