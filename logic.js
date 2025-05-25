@@ -117,6 +117,7 @@ for (let manager of Managers) {
     datasetManagerAnalyticsData.push(dataset);
 }
 
+console.log("datasetManagerAnalyticsData", datasetManagerAnalyticsData);
 
 // Gruppera data per år
 const groupedByYear = [];
@@ -131,6 +132,7 @@ const groupedByYear = [];
 // I det här fallet returnerar det t.ex. ["2019", "2020"].
 // Den färdiga arrayen sparas i en konstant med namnet allYears.
 const allYears = Object.keys(datasetManagerAnalyticsData[0].summary);
+// allYears returnerar en array med alla årtal som finns i summary-objektet.
 console.log("allYears", allYears);
 
 // Sammanställ managers per år
@@ -172,6 +174,7 @@ for (let year of allYears) {
 }
 
 console.log("groupedByYear", groupedByYear);
+// returnerar en array med objekt, ett per manager, med tillhörande gig-data och sammanställningar.
 
 // Sätt det aktuella året för visning
 let currentYear = groupedByYear[0].year;
