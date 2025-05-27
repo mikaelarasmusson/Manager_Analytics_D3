@@ -126,6 +126,7 @@ function renderGraph(parent, metric) {
 // Rita etiketter för 0-värden.
 function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, color) {
     // 1. Hämta data för valt år, om det inte finns något så blir det undefined eller en tom array utan att krascha.
+    // Find returnerar det första värdet som matchar det angivna kriteriet.
     const data = groupedByYear.find(d => d.year === selectedYear)?.managers || [];
 
     // x: namn på managers.
@@ -146,6 +147,7 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
         .duration(500)
         .attr("x", d => xScale(d.name))
         .attr("y", d => yScale(d[metric]))
+        // bandwidth() berättar hur bred varje kategori är i en bandskala är
         .attr("width", xScale.bandwidth())
         .attr("height", d => svgHeight - paddingBottom - yScale(d[metric]))
         .attr("fill", color)
@@ -231,7 +233,10 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
     // Om ett värde är 0 blir det ingen stapel.
     // Därför visas en "0"-etikett istället – annars skulle det se ut som att manager saknas.
     svg.selectAll(".zero-label")
+        // Metoden .data() kopplar ihop en array med en d3-selection och returnerar en ny d3-selection.
         .data(data.filter(d => d[metric] === 0), d => d.name)
+        // .enter() returnerar ett nytt objekt: En “enter-selection” som har lika många tomma noder (placeholders) som det finns element i arrayen.
+        //Varje tom node är kopplad till ett element i arrayen
         .enter()
         .append("text")
         .attr("class", "zero-label")
