@@ -187,6 +187,7 @@ const updateCollaboration = renderGraph(graph3, "djs");
 const updateAttendees = renderGraph(graph4, "attendees");
 
 // Skapa knappar per år
+// Så att sidan är interaktiv och kan visa olika år.
 // När du klickar:
     // currentYear uppdateras
     // Grafer uppdateras med rätt färg och data

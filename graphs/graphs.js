@@ -57,9 +57,11 @@ const colorMap = {
 
 // Skapar en graf i det angivna parent-elementet (t.ex. "graph1").
 // metric är den data som ska visas: "gigs", "earnings", etc.
+// Så att användaren ser något direkt när sidan laddas.
 function renderGraph(parent, metric) {
     // Tar första året i datan, samt dess färg.
     const firstYear = groupedByYear[0].year;
+    //  "Hämta andra färgen för årets färgkombination från colorMap, och spara den i initialColor."
     const [, initialColor] = colorMap[firstYear];
 
     // Skapar ett nytt <svg>-element där grafen ska ritas.
@@ -80,11 +82,13 @@ function renderGraph(parent, metric) {
         .text(firstYear);
 
     // xScale: används för att placera staplar (en stapel per manager).
+    // scaleBand används när domain är diskret och man vill placera elementen jämnt över en numerisk range.
     const xScale = d3.scaleBand()
         .range([paddingSides, svgWidth - paddingSides])
         .padding(0.2);
 
     // yScale: avgör staplarnas höjd beroende på värde.
+    // scaleLinear: När datan har en linjär och jämn fördelning
     const yScale = d3.scaleLinear()
         .range([svgHeight - paddingBottom, paddingSides]);
 
@@ -96,6 +100,7 @@ function renderGraph(parent, metric) {
         .attr("transform", `translate(${paddingSides}, 0)`)
 
     // Uppdaterar grafen för det första året med all konfiguration ovan.
+    // Att inte kalla på updateBarChart direkt betyder att grafen inte har något startläge när sidan laddas eller funktionen körs. Det är som att du bygger ett tomt diagram utan att fylla i staplarna – vilket för användaren ser ut som att "grafen inte fungerar".
     updateBarChart(firstYear, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, initialColor);
 
     xAxisGroup.selectAll("path, line").attr("stroke", "white");
