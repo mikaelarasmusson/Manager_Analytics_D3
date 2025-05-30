@@ -77,7 +77,6 @@ for (let manager of Managers) {
     datasetManagerAnalyticsData.push(dataset);
 }
 
-
 const groupedByYear = [];
 
 const allYears = Object.keys(datasetManagerAnalyticsData[0].summary);
@@ -106,10 +105,13 @@ for (let year of allYears) {
 
 let currentYear = groupedByYear[0].year;
 
-const updateGigs = renderGraph(graph1, "gigs");
-const updateEarnings = renderGraph(graph2, "earnings");
-const updateCollaboration = renderGraph(graph3, "djs");
-const updateAttendees = renderGraph(graph4, "attendees");
+const updateGigs = renderBarGraph(graph1, "gigs");
+const updateEarnings = renderBarGraph(graph2, "earnings");
+const updateCollaboration = renderLineGraph(graph3, "djs");
+const updateAttendees = renderLineGraph(graph4, "attendees");
+
+updateCollaboration(currentYear, colorMap[currentYear][1]);
+updateAttendees(currentYear, colorMap[currentYear][1]);
 
 groupedByYear.forEach(d => {
     const year = d.year;

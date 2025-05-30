@@ -53,7 +53,7 @@ const colorMap = {
 };
 
 
-function renderGraph(parent, metric) {
+function renderBarGraph(parent, metric) {
     const firstYear = groupedByYear[0].year;
     const [, initialColor] = colorMap[firstYear];
 
@@ -78,8 +78,14 @@ function renderGraph(parent, metric) {
         .padding(0.2);
 
 
+    const globalMax = d3.max(groupedByYear, yearGroup =>
+        d3.max(yearGroup.managers, d => d[metric])
+    ) || 1;
+
     const yScale = d3.scaleLinear()
+        .domain([0, globalMax * 1.1])
         .range([svgHeight - paddingBottom, paddingSides]);
+
 
     const xAxisGroup = svg.append("g")
         .attr("transform", `translate(0, ${svgHeight - paddingBottom})`)
@@ -107,13 +113,118 @@ function renderGraph(parent, metric) {
     return (year, color) => updateBarChart(year, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, color);
 }
 
+function renderLineGraph(parent, metric) {
+    const firstYear = groupedByYear[0].year;
+    const [, initialColor] = colorMap[firstYear];
+
+    const svg = d3.select(parent)
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight);
+
+    svg.append("text")
+        .attr("x", svgWidth - 40)
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .attr("fill", initialColor)
+        .attr("font-size", "24px")
+        .attr("font-family", "quantico-bold")
+        .text(firstYear);
+
+    const xScale = d3.scalePoint()
+        .range([paddingSides, svgWidth - paddingSides])
+        .padding(0.5);
+
+    const yScale = d3.scaleLinear()
+        .range([svgHeight - paddingBottom, paddingSides]);
+
+    const xAxisGroup = svg.append("g")
+        .attr("transform", `translate(0, ${svgHeight - paddingBottom})`);
+
+    const yAxisGroup = svg.append("g")
+        .attr("transform", `translate(${paddingSides}, 0)`);
+
+    const linePath = svg.append("path")
+        .attr("fill", "none")
+        .attr("stroke-width", 3);
+
+    const globalMax = d3.max(groupedByYear, yearGroup =>
+        d3.max(yearGroup.managers, d => d[metric])
+    ) || 1;
+
+    yScale.domain([0, globalMax * 1.1]);
+
+    return (year, color) => {
+        const data = groupedByYear.find(d => d.year === year)?.managers || [];
+
+        xScale.domain(data.map(d => d.name));
+
+        const line = d3.line()
+            .x(d => xScale(d.name))
+            .y(d => yScale(d[metric]))
+            .curve(d3.curveMonotoneX);
+
+        linePath
+            .datum(data)
+            .transition()
+            .duration(600)
+            .attr("d", line)
+            .attr("stroke", color);
+
+        const circles = svg.selectAll("circle").data(data, d => d.name);
+
+        circles.enter()
+            .append("circle")
+            .attr("cx", d => xScale(d.name))
+            .attr("cy", yScale(0))
+            .attr("r", 4)
+            .attr("fill", color)
+            .on("mouseover", function(event, d) {
+                svg.append("text")
+                    .attr("class", "tooltip-text")
+                    .attr("x", xScale(d.name))
+                    .attr("y", yScale(d[metric]) - 20)
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "white")
+                    .attr("font-size", "14px")
+                    .attr("font-weight", "bold")
+                    .text(d[metric]);
+            })
+            .on("mouseout", function() {
+                svg.selectAll(".tooltip-text").remove();
+            })
+            .transition()
+            .duration(600)
+            .attr("cy", d => yScale(d[metric]));
+
+        circles.transition()
+            .duration(600)
+            .attr("cx", d => xScale(d.name))
+            .attr("cy", d => yScale(d[metric]))
+            .attr("fill", color);
+
+        circles.exit().remove();
+
+        svg.select("text").attr("fill", color).text(year);
+
+        xAxisGroup.call(d3.axisBottom(xScale));
+        yAxisGroup.call(d3.axisLeft(yScale).ticks(5).tickFormat(d3.format("d")));
+
+        xAxisGroup.selectAll("path, line").attr("stroke", "white");
+        xAxisGroup.selectAll("text").attr("fill", "white")
+            .attr("transform", "rotate(-40)")
+            .attr("text-anchor", "end")
+            .attr("dy", "0.25em");
+
+        yAxisGroup.selectAll("path, line").attr("stroke", "white");
+        yAxisGroup.selectAll("text").attr("fill", "white");
+    };
+}
+
 function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, color) {
     const data = groupedByYear.find(d => d.year === selectedYear)?.managers || [];
 
     xScale.domain(data.map(d => d.name));
-
-    const maxValue = d3.max(data, d => d[metric]) || 1;
-    yScale.domain([0, maxValue * 1.1]);
 
     const bars = svg.selectAll("rect").data(data, d => d.name);
 
