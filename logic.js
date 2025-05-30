@@ -30,6 +30,7 @@ for (let manager of Managers) {
         summary: {}
     };
 
+
     let djCollaboration = DJs.filter(dj => dj.managerID === managerId);
 
     if (djCollaboration.length == 0) continue;
@@ -136,7 +137,6 @@ const buttonCompilation = document.createElement("button");
 buttonCompilation.id = "buttonCompilation";
 buttonCompilation.textContent = "Sammanställning";
 buttonCompilation.addEventListener("click", () => {
-
     document.getElementById("wrapper").classList.add("blur");
 
     const overlay = document.createElement("div");

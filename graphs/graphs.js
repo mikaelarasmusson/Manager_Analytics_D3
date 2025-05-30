@@ -62,6 +62,7 @@ function renderGraph(parent, metric) {
         .attr("width", svgWidth)
         .attr("height", svgHeight);
 
+
     svg.append("text")
         .attr("x", svgWidth - 40)
         .attr("y", 30)
@@ -71,9 +72,11 @@ function renderGraph(parent, metric) {
         .attr("font-family", "quantico-bold")
         .text(firstYear);
 
+
     const xScale = d3.scaleBand()
         .range([paddingSides, svgWidth - paddingSides])
         .padding(0.2);
+
 
     const yScale = d3.scaleLinear()
         .range([svgHeight - paddingBottom, paddingSides]);
@@ -103,7 +106,6 @@ function renderGraph(parent, metric) {
 
     return (year, color) => updateBarChart(year, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, color);
 }
-
 
 function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, color) {
     const data = groupedByYear.find(d => d.year === selectedYear)?.managers || [];
