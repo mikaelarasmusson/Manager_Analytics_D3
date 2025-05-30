@@ -34,13 +34,11 @@ const graph2 = document.getElementById("graph2");
 const graph3 = document.getElementById("graph3");
 const graph4 = document.getElementById("graph4");
 
-// Storlekar av svg
 const svgWidth = 600;
 const svgHeight = 400;
 const paddingSides = 70;
 const paddingBottom = 70;
 
-// Färgkarta för knapparna, återanvänds för graferna senare så att graferna är baserade på årets färg.
 const colorMap = {
     "2015": ["#FF7EFF", "#EF00EF"],
     "2016": ["#7EFF8D", "#00C217"],
@@ -55,23 +53,16 @@ const colorMap = {
 };
 
 
-// Skapar en graf i det angivna parent-elementet (t.ex. "graph1").
-// metric är den data som ska visas: "gigs", "earnings", etc.
-// Så att användaren ser något direkt när sidan laddas.
 function renderGraph(parent, metric) {
-    // Tar första året i datan, samt dess färg.
     const firstYear = groupedByYear[0].year;
-    //  "Hämta andra färgen för årets färgkombination från colorMap, och spara den i initialColor."
     const [, initialColor] = colorMap[firstYear];
 
-    // Skapar ett nytt <svg>-element där grafen ska ritas.
     const svg = d3.select(parent)
         .append("svg")
         .attr("width", svgWidth)
         .attr("height", svgHeight);
 
 
-    // Lägger till ett textfält med året uppe i hörnet av grafen.
     svg.append("text")
         .attr("x", svgWidth - 40)
         .attr("y", 30)
@@ -81,26 +72,21 @@ function renderGraph(parent, metric) {
         .attr("font-family", "quantico-bold")
         .text(firstYear);
 
-    // xScale: används för att placera staplar (en stapel per manager).
-    // scaleBand används när domain är diskret och man vill placera elementen jämnt över en numerisk range.
+
     const xScale = d3.scaleBand()
         .range([paddingSides, svgWidth - paddingSides])
         .padding(0.2);
 
-    // yScale: avgör staplarnas höjd beroende på värde.
-    // scaleLinear: När datan har en linjär och jämn fördelning
+
     const yScale = d3.scaleLinear()
         .range([svgHeight - paddingBottom, paddingSides]);
 
-    // xAxisGroup hamnar längst ner (x-axel), yAxisGroup till vänster.
     const xAxisGroup = svg.append("g")
         .attr("transform", `translate(0, ${svgHeight - paddingBottom})`)
 
     const yAxisGroup = svg.append("g")
         .attr("transform", `translate(${paddingSides}, 0)`)
 
-    // Uppdaterar grafen för det första året med all konfiguration ovan.
-    // Att inte kalla på updateBarChart direkt betyder att grafen inte har något startläge när sidan laddas eller funktionen körs. Det är som att du bygger ett tomt diagram utan att fylla i staplarna – vilket för användaren ser ut som att "grafen inte fungerar".
     updateBarChart(firstYear, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, initialColor);
 
     xAxisGroup.selectAll("path, line").attr("stroke", "white");
@@ -118,89 +104,50 @@ function renderGraph(parent, metric) {
     document.getElementById("graph3").style.border = `2px solid ${initialColor}`
     document.getElementById("graph4").style.border = `2px solid ${initialColor}`
 
-    // Returnerar en funktion som kan uppdatera grafen när ett nytt år väljs.
     return (year, color) => updateBarChart(year, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, color);
 }
 
-// Den här funktionen ritar själva staplarna (bars) och uppdaterar dem när användaren byter år.
-// Denna funktion ansvarar för att:
-// Rita stapeldiagram (bars) för ett valt år (selectedYear),
-// Binda rätt data till varje stapel (via D3),
-// Animera uppdateringar (transition),
-// Hantera musinteraktion (hover = highlight + visa värde),
-// Rita etiketter för 0-värden.
 function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGroup, metric, color) {
-    // 1. Hämta data för valt år, om det inte finns något så blir det undefined eller en tom array utan att krascha.
-    // Find returnerar det första värdet som matchar det angivna kriteriet.
     const data = groupedByYear.find(d => d.year === selectedYear)?.managers || [];
 
-    // x: namn på managers.
     xScale.domain(data.map(d => d.name));
 
-    // y: maxvärde för datan + 10 % för luft ovanför staplar.
     const maxValue = d3.max(data, d => d[metric]) || 1;
     yScale.domain([0, maxValue * 1.1]);
 
-    // D3 binder data till <rect>-element – varje manager får en stapel.
     const bars = svg.selectAll("rect").data(data, d => d.name);
 
-    // Uppdatera året till det valda året.
     svg.select("text").attr("fill", color).text(selectedYear);
 
-    // Animera till nya värden för aktuellt år.
     bars.transition()
         .duration(500)
         .attr("x", d => xScale(d.name))
         .attr("y", d => yScale(d[metric]))
-        // bandwidth() berättar hur bred varje kategori är i en bandskala är
         .attr("width", xScale.bandwidth())
         .attr("height", d => svgHeight - paddingBottom - yScale(d[metric]))
         .attr("fill", color)
         .attr("data-original-fill", color);
 
-    // Staplar som inte finns ännu skapas här.
     bars.enter()
         .append("rect")
-        // d är datan för stapeln du hovrar över (en manager).
-        // this är stapeln.
         .on("mouseover", function (event, d) {
             const currentColor = d3.select(this).attr("data-original-fill");
 
-            // I D3-eventhandlers (som .on("mouseover", ...)) pekar this på det DOM-element som användaren interagerar med.
-            // I det här fallet är this en <rect> – alltså en stapel i diagrammet.
             d3.select(this.parentNode).selectAll("rect")
                 .transition().duration(200)
-                // Vi jämför alla staplar med d.name för att avgöra om de ska lysa upp eller tonas ned.
                 .attr("fill", bar => bar.name === d.name
-                    // ? : Den fungerar som en kortform för if-else.
-                    // Här står samma sak som: 
-                    // if (bar.name === d.name) {
-                    //      return d3.color(currentColor).brighter(1);
-                    // } else {
-                    //      return d3.color(currentColor).darker(1.5);
-                    // }
-                    // Den stapel du hovrar på blir ljusare (highlight).
-                    // De andra blir mörkare (tonas ned).
                     ? d3.color(currentColor).brighter(1)
                     : d3.color(currentColor).darker(1.5));
 
             d3.select(this.parentNode)
                 .append("text")
                 .attr("class", "bar-value")
-                // xScale är en band scale – används när du har kategorier, t.ex. namn på managers.
-                // Returnerar bredden för varje “band” (dvs. varje stapel i diagrammet).
-                // Beräknas automatiskt baserat på:
-                // antalet kategorier (t.ex. managers),
-                // tillgängligt utrymme (svgWidth),
-                // padding (mellan staplar).
-                // Om du har 5 managers och en range på 500px, får varje stapel kanske 80px bredd med lite luft mellan.
                 .attr("x", xScale(d.name) + xScale.bandwidth() / 2)
                 .attr("y", yScale(d[metric]) - 10)
                 .attr("opacity", 0)
                 .attr("text-anchor", "middle")
                 .attr("fill", "white")
                 .attr("font-size", "14px")
-                // datan vi vill visa, t.ex. 500 gigs eller 12000 intäkter
                 .text(d[metric])
                 .transition()
                 .duration(200)
@@ -223,7 +170,6 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
         .attr("width", xScale.bandwidth())
         .attr("height", 0)
         .attr("fill", color)
-        // Stapeln “växer uppåt” från height: 0 till rätt höjd.
         .transition()
         .duration(500)
         .attr("x", d => xScale(d.name))
@@ -235,13 +181,8 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
 
     svg.selectAll(".zero-label").remove();
 
-    // Om ett värde är 0 blir det ingen stapel.
-    // Därför visas en "0"-etikett istället – annars skulle det se ut som att manager saknas.
     svg.selectAll(".zero-label")
-        // Metoden .data() kopplar ihop en array med en d3-selection och returnerar en ny d3-selection.
         .data(data.filter(d => d[metric] === 0), d => d.name)
-        // .enter() returnerar ett nytt objekt: En “enter-selection” som har lika många tomma noder (placeholders) som det finns element i arrayen.
-        //Varje tom node är kopplad till ett element i arrayen
         .enter()
         .append("text")
         .attr("class", "zero-label")
@@ -252,7 +193,6 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
         .attr("font-size", "14px")
         .text("0");
 
-    // Om en stapel inte längre ska finnas (försvann från datan) → den animeras bort snyggt.
     bars.exit()
         .transition()
         .duration(300)
@@ -260,25 +200,14 @@ function updateBarChart(selectedYear, xScale, yScale, svg, xAxisGroup, yAxisGrou
         .attr("height", 0)
         .remove();
 
-    // I D3 används .call() för att använda en funktion på ett selection.
-    // Skapar en automatisk axel baserat på ett band-scale (xScale).
-    // "Bottom" betyder att fästpunkten är i botten (passar för stapeldiagram).
-    // xScale innehåller kategorier som namn på managers.
-    // Instruerar D3 att fästa denna axel i <g>-elementet som representerar x-axeln.
     xAxisGroup.call(d3.axisBottom(xScale));
     yAxisGroup.call(d3.axisLeft(yScale)
-        // Försöker rita ungefär 5 stycken tick-märken (streck + siffror).
         .ticks(5))
 
-    // Ändrar färgen på själva axellinjen och strecken (ticks) till vitt.
     xAxisGroup.selectAll("path, line").attr("stroke", "white");
-    // Gör att textetiketterna (t.ex. manager-namn) får vit färg.
     xAxisGroup.selectAll("text").attr("fill", "white")
-        // Roterar x-axelns textetiketter 40 grader uppåt.
-        // Görs för att undvika att långa namn krockar.
         .attr("transform", "rotate(-40)")
         .attr("text-anchor", "end")
-        // Finjusterar vertikal position på texten så att den inte "hänger fel".
         .attr("dy", "0.25em");
 
     yAxisGroup.selectAll("path, line").attr("stroke", "white");
